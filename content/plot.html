@@ -1,0 +1,123 @@
+<div id="plotly-chart" style="width:100%;height:500px;"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+<script>
+  // Function to load JSON data
+  async function loadChartData() {
+    try {
+      const response = await fetch('/chart_data.json');
+      const figure = await response.json();
+      return figure;
+    } catch (error) {
+      console.error('Error loading chart data:', error);
+      return null;
+    }
+  }
+
+  // Theme-specific configurations
+  const themeConfigs = {
+    light: {
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      font: { color: '#2c3e50' },
+      gridcolor: '#e6e6e6'
+    },
+    dark: {
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      font: { color: '#f0f0f0' },
+      gridcolor: '#404040'
+    }
+  };
+
+  // Apply theme to layout
+  function applyTheme(layout, theme) {
+    const config = themeConfigs[theme];
+    
+    // Update layout with theme settings
+    layout.paper_bgcolor = config.paper_bgcolor;
+    layout.plot_bgcolor = config.plot_bgcolor;
+    
+    if (layout.font) {
+      layout.font.color = config.font.color;
+    } else {
+      layout.font = { color: config.font.color };
+    }
+    
+    // Update axes if they exist
+    if (layout.xaxis) {
+      layout.xaxis.gridcolor = config.gridcolor;
+      if (layout.xaxis.tickfont) {
+        layout.xaxis.tickfont.color = config.font.color;
+      } else {
+        layout.xaxis.tickfont = { color: config.font.color };
+      }
+    }
+    
+    if (layout.yaxis) {
+      layout.yaxis.gridcolor = config.gridcolor;
+      if (layout.yaxis.tickfont) {
+        layout.yaxis.tickfont.color = config.font.color;
+      } else {
+        layout.yaxis.tickfont = { color: config.font.color };
+      }
+    }
+    
+    return layout;
+  }
+
+  // Initialize the chart
+  async function initChart() {
+    const figure = await loadChartData();
+    if (!figure) return;
+    
+    // Detect current theme
+    let currentTheme = document.documentElement.getAttribute('saved-theme') || 
+                      localStorage.getItem('theme') || 
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    
+    // Apply theme to the figure layout
+    const layout = applyTheme(figure.layout, currentTheme);
+    
+    // Create the plot
+    Plotly.newPlot('plotly-chart', figure.data, layout, {
+      responsive: true,
+      displayModeBar: true,
+      displaylogo: false
+    });
+    
+    // Listen for Quartz's themechange event
+    document.addEventListener('themechange', (e) => {
+      const newLayout = applyTheme(figure.layout, e.detail.theme);
+      Plotly.relayout('plotly-chart', newLayout);
+    });
+    
+    // Watch for changes to the saved-theme attribute
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'saved-theme') {
+          const newTheme = document.documentElement.getAttribute('saved-theme');
+          const newLayout = applyTheme(figure.layout, newTheme);
+          Plotly.relayout('plotly-chart', newLayout);
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['saved-theme']
+    });
+    
+    // Make the chart responsive to window resize
+    window.addEventListener('resize', () => {
+      Plotly.Plots.resize('plotly-chart');
+    });
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChart);
+  } else {
+    initChart();
+  }
+</script>

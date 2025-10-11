@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <style>
+        #plotly-chart {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div id="plotly-chart"></div>
+
+    <script>
+        // Sample data for the chart
+        const data = [{
+            x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            y: [12500, 18000, 15000, 22000, 19000, 25500],
+            type: 'bar',
+            name: 'Sales',
+            marker: { color: '#4CAF50', opacity: 0.8 }
+        }, {
+            x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            y: [9800, 12000, 11500, 16800, 14200, 19200],
+            type: 'bar',
+            name: 'Expenses',
+            marker: { color: '#2196F3', opacity: 0.8 }
+        }];
+        
+        // Theme-specific configurations
+        const themeConfigs = {
+            light: {
+                paper_bgcolor: '#ffffff',
+                plot_bgcolor: '#ffffff',
+                font: { color: '#2c3e50' },
+                gridcolor: '#e6e6e6'
+            },
+            dark: {
+                paper_bgcolor: '#2d2d2d',
+                plot_bgcolor: '#1a1a1a',
+                font: { color: '#f0f0f0' },
+                gridcolor: '#404040'
+            }
+        };
+        
+        // Create layout based on current theme
+        function createLayout(theme) {
+            const config = themeConfigs[theme];
+            
+            return {
+                font: {
+                    family: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
+                    size: 14,
+                    color: config.font.color
+                },
+                title: {
+                    text: 'Monthly Revenue vs Expenses',
+                    font: { size: 24, color: config.font.color }
+                },
+                xaxis: {
+                    title: {
+                        text: 'Month',
+                        font: { size: 16, color: config.font.color }
+                    },
+                    gridcolor: config.gridcolor,
+                    tickfont: { color: config.font.color }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Amount ($)',
+                        font: { size: 16, color: config.font.color }
+                    },
+                    gridcolor: config.gridcolor,
+                    tickfont: { color: config.font.color }
+                },
+                paper_bgcolor: config.paper_bgcolor,
+                plot_bgcolor: config.plot_bgcolor,
+                hovermode: 'closest',
+                legend: {
+                    x: 0.5,
+                    y: -0.2,
+                    xanchor: 'center',
+                    orientation: 'h',
+                    font: { color: config.font.color }
+                },
+                margin: { l: 70, r: 40, b: 70, t: 80, pad: 10 }
+            };
+        }
+        
+        // Update chart theme
+        function updateChartTheme(theme) {
+            const layout = createLayout(theme);
+            Plotly.relayout('plotly-chart', layout);
+        }
+        
+        // Initialize the chart
+        function initChart() {
+            // Detect current theme
+            let currentTheme = document.documentElement.getAttribute('saved-theme') || 
+                              localStorage.getItem('theme') || 
+                              (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            
+            // Create the plot with detected theme
+            const layout = createLayout(currentTheme);
+            Plotly.newPlot('plotly-chart', data, layout, {responsive: true});
+            
+            // Listen for Quartz's themechange event
+            document.addEventListener('themechange', (e) => {
+                updateChartTheme(e.detail.theme);
+            });
+            
+            // Watch for changes to the saved-theme attribute
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'saved-theme') {
+                        const newTheme = document.documentElement.getAttribute('saved-theme');
+                        updateChartTheme(newTheme);
+                    }
+                });
+            });
+            
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['saved-theme']
+            });
+            
+            // Make the chart responsive to window resize
+            window.addEventListener('resize', () => {
+                Plotly.Plots.resize('plotly-chart');
+            });
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initChart);
+        } else {
+            initChart();
+        }
+    </script>
+</body>
+</html>
