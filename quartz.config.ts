@@ -15,7 +15,7 @@ const config: QuartzConfig = {
     analytics: { provider: 'google', tagId: 'G-8BKY7CJXF0' },
     locale: "ru-RU",
     baseUrl: "learningdatascience.ru",
-    ignorePatterns: ["private", "templates", ".obsidian", "_Черновики"],
+    ignorePatterns: ["private", "templates", ".obsidian", "_Черновики", "_Шаблоны"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",
