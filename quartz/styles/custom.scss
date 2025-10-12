@@ -574,6 +574,9 @@ svg.external-icon {
         flex-direction: row;
         padding: 0;
         padding-top: 2rem;
+        
+        // justify-content: flex-start;
+        max-width: 100vw;
       }
     }
 
@@ -924,7 +927,7 @@ font-size: 1.25rem;
 
   .page-title {
     white-space: nowrap; /* Prevent text wrapping */
-    font-size: 5vw !important;
+    font-size: 6vw !important;
     margin: 0 !important;
 
   }
@@ -1194,9 +1197,9 @@ video {
   border-radius: 5px;
 }
 
-.spacer {
-  flex: 2 1 auto;
-}
+// .spacer {
+//   flex: 2 1 auto;
+// }
 
 div:has(> .overflow) {
   max-height: 100%;
