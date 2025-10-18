@@ -47,7 +47,7 @@ export const defaultContentPageLayout: PageLayout = {
   ],
   afterBody:
   [
-    Component.Backlinks()
+    Component.DesktopOnly(Component.Backlinks())
   ]
 }
 
