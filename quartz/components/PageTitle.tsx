@@ -4,13 +4,19 @@ import { classNames } from "../util/lang"
 import { i18n } from "../i18n"
 
 const PageTitle: QuartzComponent = ({ fileData, cfg, displayClass }: QuartzComponentProps) => {
-  const title = cfg?.pageTitle ?? i18n(cfg.locale).propertyDefaults.title
+  const rawTitle = cfg?.pageTitle ?? i18n(cfg.locale).propertyDefaults.title
   const baseDir = pathToRoot(fileData.slug!)
-  return (
-    <h2 class={classNames(displayClass, "page-title")}>
-      <a href={baseDir}>{title}</a>
-    </h2>
-  )
+  
+  // Split on " | " or just "|" – we'll trim spaces
+  const parts = rawTitle.split("|").map(part => part.trim())
+  
+return (
+  <h2 class={classNames(displayClass, "page-title")} >
+    <a href={baseDir}>
+      Learning<br />Data Science
+    </a>
+  </h2>
+)
 }
 
 PageTitle.css = `
@@ -83,14 +89,25 @@ PageTitle.css = `
 }
 
 .page-title {
-  font-size: 4.15rem !important;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
   font-family: 'KJV1611' !important;
 }
-  
+  .page-title {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    font-family: 'KJV1611' !important;
+}
+
+/* 🟢 ADD THIS BLOCK 🟢 */
+.page-title a {
+    white-space: normal !important;
+    display: inline-block !important;
+}
 `
 
 export default (() => PageTitle) satisfies QuartzComponentConstructor

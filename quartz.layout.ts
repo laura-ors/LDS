@@ -34,11 +34,13 @@ export const defaultContentPageLayout: PageLayout = {
           Component: Component.Search(),
           grow: true,
         },
+        
+   { Component.MobileOnly(Component.Spacer()),},
         { Component: Component.Darkmode() },
         { Component: Component.ReaderMode() },
       ],
     }),
-    Component.Explorer(),
+    // Component.Explorer(),
   ],
   right: [
     Component.Graph(),

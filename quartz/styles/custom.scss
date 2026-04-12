@@ -45,7 +45,29 @@ padding: 0em 0.25em;
   // --pastel-purple: #E2D1F9;
   }
 
+[saved-theme=light] h2.page-title {
+    text-align: center;
+}
 
+[saved-theme=dark] h2.page-title {
+    text-align: center;
+}
+
+[saved-theme=light] h2.page-title {
+    margin-block-start: 0;
+    margin-bottom: 2rem !important;
+}
+
+[saved-theme=dark] h2.page-title {
+    margin-block-start: 0;
+    margin-bottom: 2rem !important;
+}
+
+@media (max-width: 800px) {
+  .article-title {
+    margin-left: -30px !important;
+  }
+}
 
   [saved-theme="dark"] .text-highlight{ 
     background: linear-gradient(
@@ -953,7 +975,6 @@ font-size: 1.25rem;
 
   .page-title {
     white-space: nowrap; /* Prevent text wrapping */
-    font-size: 6vw !important;
     margin: 0 !important;
 
   }
