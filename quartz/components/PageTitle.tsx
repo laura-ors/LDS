@@ -4,19 +4,13 @@ import { classNames } from "../util/lang"
 import { i18n } from "../i18n"
 
 const PageTitle: QuartzComponent = ({ fileData, cfg, displayClass }: QuartzComponentProps) => {
-  const rawTitle = cfg?.pageTitle ?? i18n(cfg.locale).propertyDefaults.title
+  const title = cfg?.pageTitle ?? i18n(cfg.locale).propertyDefaults.title
   const baseDir = pathToRoot(fileData.slug!)
-  
-  // Split on " | " or just "|" – we'll trim spaces
-  const parts = rawTitle.split("|").map(part => part.trim())
-  
-return (
-  <h2 class={classNames(displayClass, "page-title")} >
-    <a href={baseDir}>
-      Learning<br />Data Science
-    </a>
-  </h2>
-)
+  return (
+    <h2 class={classNames(displayClass, "page-title")}>
+      <a href={baseDir}>{title}</a>
+    </h2>
+  )
 }
 
 PageTitle.css = `

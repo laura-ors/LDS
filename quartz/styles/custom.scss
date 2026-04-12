@@ -60,7 +60,7 @@ padding: 0em 0.25em;
 
 [saved-theme=dark] h2.page-title {
     margin-block-start: 0;
-    margin-bottom: 2rem !important;
+    // margin-bottom: 2rem !important;
 }
 
 @media (max-width: 800px) {
@@ -619,6 +619,7 @@ svg.external-icon {
         padding: 0;
         padding-top: 2rem;
         
+    padding: 5pt 0 0 !important;
         // justify-content: flex-start;
         max-width: 100vw;
       }
